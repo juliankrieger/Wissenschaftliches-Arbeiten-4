@@ -1,6 +1,6 @@
 import bigjpg from "./bigjpg.jpg";
 import biggif from "./giphy.gif";
-import bigpng from "./hugepng.jpg"
+import bigpng from "./bigpng.png"
 import './page.css'
 
 document.getElementById("JPG").src = bigjpg;

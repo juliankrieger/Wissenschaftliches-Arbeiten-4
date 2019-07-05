@@ -6,17 +6,9 @@ const path = require('path');
 // Import HtmlWebPackPlugin to bundle all HTML with script tags
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 
-// Clean Dist Folder on Compilation 
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-
-//TerserJS, needed to Minify JS
-const TerserJSPlugin = require('terser-webpack-plugin');
-
 //MiniCssExtractPlugin to minify and extract CSS from css files
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-//It will search for CSS assets during the Webpack build and will optimize \ minimize the CSS
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 //Bundle Analyzer on Serve in Dev Mode
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -57,20 +49,11 @@ const config = {
         test: /\.html$/, //Pack and minify html
         use: {
           loader: 'html-loader',
-          options: {
-            minimize: true, //Minimiere HTML
-            interpolate: true, //Erlaube das Interpolieren von Bilder in HTML
-            removeComments: true, //Entferne Kommentare
-            collapseWhitespace: true, //Entferne Leerzeichen und Tabs, soweit möglich
-          },
         },
       },
       {
         test: /\.(sa|sc|c)ss$/, //Packe und Minifiziere CSS
         use: [
-          {
-            loader: MiniCssExtractPlugin.loader, //Injiziere CSS in die Seite
-          },
           {
             loader: 'css-loader', //Lädt CSS als Javascript Module
             options: {
@@ -101,25 +84,6 @@ const config = {
               name: '[name].[ext]',
             },
           },
-          {
-            loader: 'image-webpack-loader', //Kompressionsalgorithmen
-            options: {
-              mozjpeg: {
-                progressive: true,
-                quality: 65
-              },
-              optipng: {
-                enabled: false,
-              },
-              pngquant: {
-                quality: '65-90',
-                speed: 4
-              },
-              gifsicle: {
-                interlaced: false,
-              }
-            }
-          },
         ],
       },
     ],
@@ -134,10 +98,6 @@ const config = {
         viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no',
       },
     }),
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[name].css',
-    }),
     //Hack to not include BundleAnalyzerPlugin in Dev Mode
     new BundleAnalyzerPlugin({
       analyzerHost: "localhost",
@@ -150,7 +110,9 @@ const config = {
     })
   ],
   optimization: {
-    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+    minimize: false,
+    mergeDuplicateChunks: false,
+
   },
   stats: {
      // copied from `'minimal'`
