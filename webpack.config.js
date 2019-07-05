@@ -38,8 +38,8 @@ const config = {
   output: {
     path: path.resolve(__dirname, './dist'),
     //Filenames are hashes in production
-    filename: isDevMode() ? '[name].bundle.js' : '[name].[hash:8].js',
-    chunkFilename: isDevMode() ? '[name].bundle.js' : '[name].[hash:8].js'
+    filename: '[name].bundle.js',
+    chunkFilename: '[name].bundle.js'
   },
   //Development Tool in dev mode
   devtool: 'source-map',
@@ -98,7 +98,7 @@ const config = {
           {
             loader: 'file-loader',
             options: {
-              name: '[hash].[ext]',
+              name: '[name].[ext]',
             },
           },
           {
@@ -135,8 +135,8 @@ const config = {
       },
     }),
     new MiniCssExtractPlugin({
-      filename: isDevMode() ? '[name].css' : '[hash].css',
-      chunkFilename: isDevMode() ? '[name].css' : '[hash].css',
+      filename: '[name].css',
+      chunkFilename: '[name].css',
     }),
     //Hack to not include BundleAnalyzerPlugin in Dev Mode
     new BundleAnalyzerPlugin({
@@ -144,6 +144,9 @@ const config = {
       analyzerPort: 8090,
       openAnalyzer: false,
       generateStatsFile: true
+    }),
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1
     })
   ],
   optimization: {
